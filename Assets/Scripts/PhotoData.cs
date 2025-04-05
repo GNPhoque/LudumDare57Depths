@@ -43,7 +43,7 @@ public class PhotoData : ScriptableObject
 	public PhotoAcceptationModel IsPhotoAccepted(PhotoData data)
 	{
 		PhotoAcceptationModel model = new PhotoAcceptationModel();
-		model.position = Vector3.Distance(data.position, position) < positionApprox;
+		model.position = Vector2.Distance(new Vector2(data.position.x,data.position.z), new Vector2(position.x,position.z)) < positionApprox;
 		model.rotation = Vector3.Distance(data.rotation, rotation) < rotationApprox;
 		model.focalLength = data.focalLength - focalLength < focalLengthApprox;
 		model.aperture = data.aperture - aperture < apertureApprox;

@@ -86,6 +86,11 @@ public class PlayerController : MonoBehaviour
 		lookInput = value.Get<Vector2>().normalized;
 	}
 
+	public void OnCrouch()
+	{
+		cameraController.CycleObjectives();
+	}
+
 	public void OnTakePhoto(InputValue value)
 	{
 		StartCoroutine(cameraController.TakePhoto());

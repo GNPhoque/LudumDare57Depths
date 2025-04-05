@@ -13,8 +13,12 @@ public enum SelectedSetting
 
 public class CameraController : MonoBehaviour
 {
+	[SerializeField] private PhotoData DEBUGObjectivePhoto;
+	[SerializeField] private DebugSaveScreenshot debugSave;
+
+	[SerializeField] private PhotoData[] objectivePhotos;
 	[SerializeField] private PhotoData currentPhoto;
-	[SerializeField] private PhotoData currentComparePhoto;
+	[SerializeField] private int currentObjectivePhoto;
 	[SerializeField] private float apertureStep;
 	[SerializeField] private float focalLengthStep;
 	[SerializeField] private LayerMask antiPlayerLayerMask;
@@ -38,8 +42,14 @@ public class CameraController : MonoBehaviour
 	{
 		dof.aperture.value = cameraSettings.aperture;
 		Camera.main.aperture = cameraSettings.aperture;
+		playerUI.apertureText.text = $"Aperture : {cameraSettings.aperture}";
+		
 		dof.focalLength.value = cameraSettings.focalLength + 40f;
 		Camera.main.focalLength = cameraSettings.focalLength;
+		playerUI.focalText.text = $"Focal : {cameraSettings.focalLength}";
+
+		dof.focusDistance.value = 10f;
+		playerUI.focusText.text = $"Focus : {dof.focusDistance.value.ToString("F1")}";
 	}
 
 	private SelectedSetting selectedSetting;
@@ -69,11 +79,13 @@ public class CameraController : MonoBehaviour
 				cameraSettings.aperture += apertureStep;
 				dof.aperture.value = cameraSettings.aperture;
 				Camera.main.aperture = cameraSettings.aperture;
+				playerUI.apertureText.text = $"Aperture : {cameraSettings.aperture}";
 				break;
 			case SelectedSetting.FocalLength:
 				cameraSettings.focalLength += focalLengthStep;
 				dof.focalLength.value = cameraSettings.focalLength + 40f;
 				Camera.main.focalLength = cameraSettings.focalLength;
+				playerUI.focalText.text = $"Focal : {cameraSettings.focalLength}";
 				break;
 			default:
 				break;
@@ -90,11 +102,13 @@ public class CameraController : MonoBehaviour
 				cameraSettings.aperture -= apertureStep;
 				dof.aperture.value = cameraSettings.aperture;
 				Camera.main.aperture = cameraSettings.aperture;
+				playerUI.apertureText.text = $"Aperture : {cameraSettings.aperture}";
 				break;
 			case SelectedSetting.FocalLength:
 				cameraSettings.focalLength -= focalLengthStep;
 				dof.focalLength.value = cameraSettings.focalLength + 40f;
 				Camera.main.focalLength = cameraSettings.focalLength;
+				playerUI.focalText.text = $"Focal : {cameraSettings.focalLength}";
 				break;
 			default:
 				break;
@@ -107,16 +121,19 @@ public class CameraController : MonoBehaviour
 		if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 500f, antiPlayerLayerMask))
 		{
 			dof.focusDistance.value = hit.distance;
+			playerUI.focusText.text = $"Focus : {dof.focusDistance.value.ToString("00.0")}";
 		}
 	}
 
 	public IEnumerator TakePhoto()
 	{
+		if (debugSave != null) debugSave.TakeScreenshot();
 		Sprite sprite = takeScreenshot.TakePhoto();
+		if(DEBUGObjectivePhoto!= null) DEBUGObjectivePhoto.SetPhoto(sprite, transform.position, transform.rotation.eulerAngles, cameraSettings.focalLength, cameraSettings.aperture, dof.focusDistance.value);
 		currentPhoto.SetPhoto(sprite, transform.position, transform.rotation.eulerAngles, cameraSettings.focalLength, cameraSettings.aperture, dof.focusDistance.value);
 		playerUI.photoFeedback.sprite = sprite;
 		playerUI.photoFeedback.gameObject.SetActive(true);
-		PhotoAcceptationModel model = currentComparePhoto.IsPhotoAccepted(currentPhoto);
+		PhotoAcceptationModel model = objectivePhotos[currentObjectivePhoto].IsPhotoAccepted(currentPhoto);
 
 		playerUI.photoDataUIContainer.SetActive(true);
 		playerUI.photoPositionUI.gameObject.SetActive(false);
@@ -146,7 +163,15 @@ public class CameraController : MonoBehaviour
 		playerUI.photoDataUIContainer.SetActive(false);
 		playerUI.photoFeedback.gameObject.SetActive(false);
 
-		//Marquer photo OK/KO
-		//		model.IsAccepted()
+		if (model.IsAccepted())
+		{
+			playerUI.CheckPhoto();
+		}
+	}
+
+	public void CycleObjectives()
+	{
+		currentObjectivePhoto = currentObjectivePhoto + 1 >= objectivePhotos.Length ? 0 : currentObjectivePhoto + 1;
+		playerUI.CycleObjectivePhotos();
 	}
 }
