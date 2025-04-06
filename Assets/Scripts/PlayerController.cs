@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterController characterController;
 	[SerializeField] private CameraController cameraController;
 	[SerializeField] private PlayerInput playerInput;
+	[SerializeField] private PlayerUI playerUI;
 
 	private bool canMove = true;
     public float gravity = 10f;
@@ -98,7 +99,14 @@ public class PlayerController : MonoBehaviour
 
 	public void OnTakePhoto(InputValue value)
 	{
-		StartCoroutine(cameraController.TakePhoto());
+		if (playerUI.isWaitingInput)
+		{
+			playerUI.ContinueUI();
+		}
+		else
+		{
+			StartCoroutine(cameraController.TakePhoto());
+		}
 	}
 
 	public void OnAutoFocus(InputValue value)
@@ -108,12 +116,12 @@ public class PlayerController : MonoBehaviour
 
 	public void OnAperture(InputValue value)
 	{
-		cameraController.SelectAperture(value.isPressed);
+		cameraController.SelectAperture();
 	}
 
 	public void OnFocalLength(InputValue value)
 	{
-		cameraController.SelectFocalLength(value.isPressed);
+		cameraController.SelectFocalLength();
 	}
 
 	public void OnIncreaseSetting(InputValue value)

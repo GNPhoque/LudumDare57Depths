@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -16,6 +18,11 @@ public class CameraController : MonoBehaviour
 	[SerializeField] private PhotoData DEBUGObjectivePhoto;
 	[SerializeField] private DebugSaveScreenshot debugSave;
 
+	[Space(10)]
+	[SerializeField] private DialogsSO introDialog;
+	[SerializeField] private DialogsSO correctPhotoLines;
+	[SerializeField] private DialogsSO failedPhotoLines;
+	[SerializeField] private DialogsSO failedPhotoSettingLines;
 	[SerializeField] private PhotoData[] objectivePhotos;
 	[SerializeField] private PhotoData currentPhoto;
 	[SerializeField] private int currentObjectivePhoto;
@@ -27,6 +34,7 @@ public class CameraController : MonoBehaviour
 	[SerializeField] private TakeScreenshot takeScreenshot;
 	[SerializeField] private PlayerUI playerUI;
 
+	private bool isPhotoOk;
 	private DepthOfField dof;
 	private WaitForSeconds wfs = new WaitForSeconds(1f);
 
@@ -50,6 +58,18 @@ public class CameraController : MonoBehaviour
 
 		dof.focusDistance.value = 10f;
 		playerUI.focusText.text = $"Focus : {dof.focusDistance.value.ToString("F1")}";
+
+		playerUI.SetDialogs(new List<string>(introDialog.lines));
+		playerUI.OnDialogCompleted += PlayerUI_OnDialogCompleted;
+	}
+
+	private void PlayerUI_OnDialogCompleted()
+	{
+		playerUI.OnDialogCompleted -= PlayerUI_OnDialogCompleted;
+		//Show pictures
+		playerUI.ShowObjectivePhotos();
+		//Show tutorial
+		playerUI.ShowTutorial();
 	}
 
 	private SelectedSetting selectedSetting;
@@ -59,14 +79,32 @@ public class CameraController : MonoBehaviour
 		selectedSetting = SelectedSetting.None;
 	}
 
-	public void SelectAperture(bool selected)
+	public void SelectAperture()
 	{
-		selectedSetting = selected ? SelectedSetting.Aperture : SelectedSetting.None;
+		if (selectedSetting != SelectedSetting.Aperture)
+		{
+			selectedSetting = SelectedSetting.Aperture;
+			playerUI.ShowSelectedAperture();
+		}
+		else
+		{
+			selectedSetting = SelectedSetting.None;
+			playerUI.ShowSelectedNone();
+		}
 	}
 
-	public void SelectFocalLength(bool selected)
+	public void SelectFocalLength()
 	{
-		selectedSetting = selected ? SelectedSetting.FocalLength : SelectedSetting.None;
+		if (selectedSetting != SelectedSetting.FocalLength)
+		{
+			selectedSetting = SelectedSetting.FocalLength;
+			playerUI.ShowSelectedFocal();
+		}
+		else
+		{
+			selectedSetting = SelectedSetting.None;
+			playerUI.ShowSelectedNone();
+		}
 	}
 
 	public void IncreaseSetting()
@@ -129,7 +167,7 @@ public class CameraController : MonoBehaviour
 	{
 		if (debugSave != null) debugSave.TakeScreenshot();
 		Sprite sprite = takeScreenshot.TakePhoto();
-		if(DEBUGObjectivePhoto!= null) DEBUGObjectivePhoto.SetPhoto(sprite, transform.position, transform.rotation.eulerAngles, cameraSettings.focalLength, cameraSettings.aperture, dof.focusDistance.value);
+		if (DEBUGObjectivePhoto != null) DEBUGObjectivePhoto.SetPhoto(sprite, transform.position, transform.rotation.eulerAngles, cameraSettings.focalLength, cameraSettings.aperture, dof.focusDistance.value);
 		currentPhoto.SetPhoto(sprite, transform.position, transform.rotation.eulerAngles, cameraSettings.focalLength, cameraSettings.aperture, dof.focusDistance.value);
 		playerUI.photoFeedback.sprite = sprite;
 		playerUI.photoFeedback.gameObject.SetActive(true);
@@ -160,10 +198,54 @@ public class CameraController : MonoBehaviour
 		yield return wfs;
 		yield return wfs;
 		yield return wfs;
+
+		isPhotoOk = model.IsAccepted();
+		List<string> dialogStrings = new List<string>();
+
+		if (isPhotoOk)
+		{
+			dialogStrings.Add(correctPhotoLines.lines[Random.Range(0, correctPhotoLines.lines.Count())]);
+		}
+		else
+		{
+			dialogStrings.AddRange(failedPhotoLines.lines);
+
+			if (model.position == false)
+			{
+				dialogStrings.Add(failedPhotoSettingLines.lines[0]);
+			}
+			if (model.rotation == false)
+			{
+				dialogStrings.Add(failedPhotoSettingLines.lines[1]);
+			}
+			if (model.focalLength == false)
+			{
+				dialogStrings.Add(failedPhotoSettingLines.lines[2]);
+			}
+			if (model.aperture == false)
+			{
+				dialogStrings.Add(failedPhotoSettingLines.lines[3]);
+			}
+			if (model.focusDistance == false)
+			{
+				dialogStrings.Add(failedPhotoSettingLines.lines[4]);
+			}
+
+			string selectedDialog = dialogStrings[Random.Range(0, dialogStrings.Count)];
+			dialogStrings = new List<string>() { selectedDialog };
+		}
+
+		playerUI.SetDialogs(dialogStrings);
+		playerUI.OnDialogCompleted += ClosePhotoReport;
+	}
+
+	private void ClosePhotoReport()
+	{
+		playerUI.OnDialogCompleted -= ClosePhotoReport;
 		playerUI.photoDataUIContainer.SetActive(false);
 		playerUI.photoFeedback.gameObject.SetActive(false);
 
-		if (model.IsAccepted())
+		if (isPhotoOk)
 		{
 			playerUI.CheckPhoto();
 		}
