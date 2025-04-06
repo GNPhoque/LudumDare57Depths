@@ -346,6 +346,17 @@
                 },
                 {
                     "name": "",
+                    "id": "b8234866-8a17-40a7-bc87-c9786c32ee7b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "TakePhoto",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "cbac6039-9c09-46a1-b5f2-4e5124ccb5ed",
                     "path": "<Keyboard>/2",
                     "interactions": "",
@@ -457,7 +468,7 @@
                 {
                     "name": "",
                     "id": "1c04ea5f-b012-41d1-a6f7-02e963b52893",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -501,7 +512,7 @@
                 {
                     "name": "",
                     "id": "f32048a1-00ee-4c4d-9dd9-9ef2284766f2",
-                    "path": "<Gamepad>/leftShoulder",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -523,7 +534,7 @@
                 {
                     "name": "",
                     "id": "2128f3d6-3d69-4f41-a9aa-0e6cf54d7cec",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -534,7 +545,7 @@
                 {
                     "name": "",
                     "id": "332935ef-49b3-4358-91cd-881515604a2d",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",

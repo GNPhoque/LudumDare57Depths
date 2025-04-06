@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,6 +7,11 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
+	[SerializeField] private DialogsSO winDialog;
+
+	[SerializeField] private float collimatorAnimationDuration;
+	[SerializeField] private Image collimator;
+
 	[SerializeField] public Sprite checkSprite;
 	[SerializeField] public Sprite crossSprite;
 	[SerializeField] public Image photoFeedback;
@@ -27,23 +33,33 @@ public class PlayerUI : MonoBehaviour
 
 	[SerializeField] public RectTransform objectivePhotoContainer;
 	[SerializeField] public RectTransform[] objectivePhotoPositionUIs;
+	[SerializeField] public Image[] objectivePhotos;
 	[SerializeField] public GameObject[] objectivePhotoChecks;
 	[SerializeField] public float[] objectivePhotoHeights;
 
-	[SerializeField] GameObject focalSettingSelected;
-	[SerializeField] GameObject apertureSettingSelected;
-	[SerializeField] GameObject focusSettingSelected;
+	[SerializeField] private GameObject focalSettingSelected;
+	[SerializeField] private GameObject apertureSettingSelected;
+	[SerializeField] private GameObject focusSettingSelected;
 
 	[SerializeField] private GameObject tutorial;
 
 	public bool isWaitingInput => isDialogOpen || isTutorialOpen;
 
+	private bool isAlreadyWon;
 	private bool isDialogOpen;
 	private bool isTutorialOpen;
 	private int currentFirstObjectivePhoto;
 	public List<string> dialogs = new List<string>();
 
 	public event Action OnDialogCompleted;
+
+	public void SetObjectivePhotos(PhotoData[] datas)
+	{
+		for (int i = 0; i < datas.Length; i++)
+		{
+			objectivePhotos[i].sprite = datas[i].sprite;
+		}
+	}
 
 	public void ContinueUI()
 	{
@@ -67,6 +83,7 @@ public class PlayerUI : MonoBehaviour
 	{
 		if (dialogs.Count != 0)
 		{
+			AudioManager.instance.PlayBlablabla();
 			isDialogOpen = true;
 			dialogueBox.SetActive(true);
 			dialogueText.text = dialogs[0];
@@ -94,12 +111,23 @@ public class PlayerUI : MonoBehaviour
 
 	public void ShowObjectivePhotos()
 	{
-		objectivePhotoContainer.anchoredPosition = new Vector2(objectivePhotoContainer.anchoredPosition.x, 0f);
+		StartCoroutine(SlidePhotosConainer());
+	}
+
+	IEnumerator SlidePhotosConainer()
+	{
+		while (objectivePhotoContainer.anchoredPosition.y > 0)
+		{
+			yield return null;
+			objectivePhotoContainer.anchoredPosition = new Vector2(objectivePhotoContainer.anchoredPosition.x, objectivePhotoContainer.anchoredPosition.y - Time.deltaTime);
+		}
 	}
 
 	[ContextMenu("Cycle")]
 	public void CycleObjectivePhotos()
 	{
+		AudioManager.instance.PlaySwipe();
+
 		objectivePhotoPositionUIs[currentFirstObjectivePhoto].anchoredPosition = new Vector2(0f, 0f);
 		objectivePhotoPositionUIs[currentFirstObjectivePhoto].SetSiblingIndex(0);
 
@@ -115,6 +143,22 @@ public class PlayerUI : MonoBehaviour
 	public void CheckPhoto()
 	{
 		objectivePhotoChecks[currentFirstObjectivePhoto].SetActive(true);
+
+		if (isAlreadyWon)
+		{
+			return;
+		}
+
+		bool allOk = true;
+		foreach (var item in objectivePhotoChecks)
+		{
+			if (item.activeSelf == false) allOk = false;
+		}
+		if (allOk)
+		{
+			SetDialogs(winDialog.lines);
+			isAlreadyWon = true;
+		}
 	}
 
 	public void ShowSelectedFocal()
@@ -143,5 +187,17 @@ public class PlayerUI : MonoBehaviour
 		focalSettingSelected.SetActive(false);
 		apertureSettingSelected.SetActive(false);
 		focusSettingSelected.SetActive(false);
+	}
+
+	public void CollimatorAnimation()
+	{
+		StartCoroutine(CollimatorCoroutine());
+	}
+
+	private IEnumerator CollimatorCoroutine()
+	{
+		collimator.color = Color.red;
+		yield return new WaitForSeconds(collimatorAnimationDuration);
+		collimator.color = Color.black;
 	}
 }

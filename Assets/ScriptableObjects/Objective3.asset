@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18699eecce085604ca1b20335cbe2e13, type: 3}
   m_Name: Objective3
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: e4605d2bcc03d4f46aaf5aa9a4863949, type: 3}
-  position: {x: 0, y: 1.48, z: 0}
-  rotation: {x: 357.35916, y: 14.435687, z: -0.000000026708792}
-  focalLength: 50
-  aperture: 4
-  focusDistance: 8.417341
-  positionApprox: 1
+  sprite: {fileID: 21300000, guid: 7b6d25f6bbfb28e49b54b15b794902d4, type: 3}
+  position: {x: -71.601456, y: 1.6079923, z: -115.10148}
+  rotation: {x: 343.40744, y: 150.91139, z: 0}
+  focalLength: 20
+  aperture: 1
+  focusDistance: 8.97858
+  positionApprox: 2
   rotationApprox: 30
-  focalLengthApprox: 1
-  apertureApprox: 1
-  focusDistanceApprox: 1
+  focalLengthApprox: 5
+  apertureApprox: 2
+  focusDistanceApprox: 3

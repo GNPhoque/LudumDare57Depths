@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: WinDialog
   m_EditorClassIdentifier: 
   lines:
-  - 
+  - Wow, you've really got all these pictures?
+  - ... Ok, it looks good enough for me...
+  - Welcome to the team!

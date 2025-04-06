@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Objective4
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 2278e8943b36e6f4bb49123482eba6cd, type: 3}
-  position: {x: 0.46732268, y: 1.5600001, z: 6.565964}
-  rotation: {x: 7.6086183, y: 83.923325, z: -0.00000043067865}
-  focalLength: 29
+  position: {x: -96.10079, y: 1.4400187, z: -129.1855}
+  rotation: {x: 24.775854, y: 286.08344, z: -0.0000009403267}
+  focalLength: 20
   aperture: 1
-  focusDistance: 1.555029
-  positionApprox: 1
+  focusDistance: 3.673698
+  positionApprox: 2
   rotationApprox: 30
-  focalLengthApprox: 1
-  apertureApprox: 1
-  focusDistanceApprox: 1
+  focalLengthApprox: 5
+  apertureApprox: 2
+  focusDistanceApprox: 3

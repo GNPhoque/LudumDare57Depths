@@ -17,7 +17,7 @@ public class PhotoAcceptationModel
 [CreateAssetMenu(fileName = "PhotoData")]
 public class PhotoData : ScriptableObject
 {
-	[SerializeField] Sprite sprite;
+	[SerializeField] public Sprite sprite;
 	[SerializeField] Vector3 position;
 	[SerializeField] Vector3 rotation;
 	[SerializeField] float focalLength;

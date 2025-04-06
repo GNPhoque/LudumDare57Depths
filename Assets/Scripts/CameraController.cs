@@ -48,10 +48,14 @@ public class CameraController : MonoBehaviour
 
 	private void Start()
 	{
+		playerUI.SetObjectivePhotos(objectivePhotos);
+
+		cameraSettings.aperture = 4f;
 		dof.aperture.value = cameraSettings.aperture;
 		Camera.main.aperture = cameraSettings.aperture;
 		playerUI.apertureText.text = $"Aperture : {cameraSettings.aperture}";
-		
+
+		cameraSettings.focalLength = 20f;
 		dof.focalLength.value = cameraSettings.focalLength + 40f;
 		Camera.main.focalLength = cameraSettings.focalLength;
 		playerUI.focalText.text = $"Focal : {cameraSettings.focalLength}";
@@ -114,12 +118,14 @@ public class CameraController : MonoBehaviour
 			case SelectedSetting.None:
 				break;
 			case SelectedSetting.Aperture:
+				AudioManager.instance.PlayClic();
 				cameraSettings.aperture += apertureStep;
 				dof.aperture.value = cameraSettings.aperture;
 				Camera.main.aperture = cameraSettings.aperture;
 				playerUI.apertureText.text = $"Aperture : {cameraSettings.aperture}";
 				break;
 			case SelectedSetting.FocalLength:
+				AudioManager.instance.PlayClic();
 				cameraSettings.focalLength += focalLengthStep;
 				dof.focalLength.value = cameraSettings.focalLength + 40f;
 				Camera.main.focalLength = cameraSettings.focalLength;
@@ -137,12 +143,14 @@ public class CameraController : MonoBehaviour
 			case SelectedSetting.None:
 				break;
 			case SelectedSetting.Aperture:
+				AudioManager.instance.PlayClic();
 				cameraSettings.aperture -= apertureStep;
 				dof.aperture.value = cameraSettings.aperture;
 				Camera.main.aperture = cameraSettings.aperture;
 				playerUI.apertureText.text = $"Aperture : {cameraSettings.aperture}";
 				break;
 			case SelectedSetting.FocalLength:
+				AudioManager.instance.PlayClic();
 				cameraSettings.focalLength -= focalLengthStep;
 				dof.focalLength.value = cameraSettings.focalLength + 40f;
 				Camera.main.focalLength = cameraSettings.focalLength;
@@ -158,13 +166,17 @@ public class CameraController : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 500f, antiPlayerLayerMask))
 		{
+			AudioManager.instance.PlayFocus();
 			dof.focusDistance.value = hit.distance;
 			playerUI.focusText.text = $"Focus : {dof.focusDistance.value.ToString("00.0")}";
+
+			playerUI.CollimatorAnimation();
 		}
 	}
 
 	public IEnumerator TakePhoto()
 	{
+		AudioManager.instance.PlayTrigger();
 		if (debugSave != null) debugSave.TakeScreenshot();
 		Sprite sprite = takeScreenshot.TakePhoto();
 		if (DEBUGObjectivePhoto != null) DEBUGObjectivePhoto.SetPhoto(sprite, transform.position, transform.rotation.eulerAngles, cameraSettings.focalLength, cameraSettings.aperture, dof.focusDistance.value);
@@ -195,8 +207,6 @@ public class CameraController : MonoBehaviour
 		yield return wfs;
 		playerUI.photoFocusUI.image.sprite = model.focusDistance ? playerUI.checkSprite : playerUI.crossSprite;
 		playerUI.photoFocusUI.gameObject.SetActive(true);
-		yield return wfs;
-		yield return wfs;
 		yield return wfs;
 
 		isPhotoOk = model.IsAccepted();
