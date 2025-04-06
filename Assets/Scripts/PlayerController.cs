@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private CharacterController characterController;
 	[SerializeField] private CameraController cameraController;
+	[SerializeField] private PlayerInput playerInput;
 
 	private bool canMove = true;
     public float gravity = 10f;
@@ -83,7 +84,11 @@ public class PlayerController : MonoBehaviour
 
 	public void OnLook(InputValue value)
 	{
-		lookInput = value.Get<Vector2>().normalized;
+		lookInput = value.Get<Vector2>();
+		if (playerInput.currentControlScheme == "Keyboard&Mouse")
+		{
+			lookInput *= .1f; 
+		}
 	}
 
 	public void OnCrouch()
@@ -98,7 +103,6 @@ public class PlayerController : MonoBehaviour
 
 	public void OnAutoFocus(InputValue value)
 	{
-		print("AUTOFOCUS");
 		cameraController.AutoFocus();
 	}
 

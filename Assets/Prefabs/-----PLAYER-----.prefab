@@ -3204,6 +3204,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 2477967056986792786}
   characterController: {fileID: 7440154771250872916}
   cameraController: {fileID: 2613874237920692358}
+  playerInput: {fileID: 2269673389521706071}
   gravity: 10
 --- !u!114 &2269673389521706071
 MonoBehaviour:
