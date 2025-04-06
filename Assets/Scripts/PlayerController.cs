@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
 	[SerializeField] private float moveSpeed;
@@ -12,6 +11,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private CameraController cameraController;
 
 	private bool canMove = true;
+    public float gravity = 10f;
 	private float xRotation;
 	private Vector2 moveInput;
 	private Vector2 lookInput;
@@ -56,10 +56,10 @@ public class PlayerController : MonoBehaviour
 		//	moveDirection.y = movementDirectionY;
 		//}
 
-		//if (!cController.isGrounded)
-		//{
-		//	moveDirection.y -= gravity * Time.deltaTime;
-		//}
+		if (!characterController.isGrounded)
+		{
+			movement.y -= gravity * Time.deltaTime;
+		}
 
 		//#endregion
 
