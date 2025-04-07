@@ -266,6 +266,10 @@ public class CameraController : MonoBehaviour
 
 	public void CycleObjectives()
 	{
+		if (playerUI.isCycling)
+		{
+			return;
+		}
 		currentObjectivePhoto = currentObjectivePhoto + 1 >= objectivePhotos.Length ? 0 : currentObjectivePhoto + 1;
 		playerUI.CycleObjectivePhotos();
 	}

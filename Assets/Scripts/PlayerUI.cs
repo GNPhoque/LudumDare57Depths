@@ -45,7 +45,7 @@ public class PlayerUI : MonoBehaviour
 
 	public bool isWaitingInput => isDialogOpen || isTutorialOpen;
 
-	private bool isCycling;
+	public bool isCycling;
 	private bool isAlreadyWon;
 	private bool isDialogOpen;
 	private bool isTutorialOpen;
@@ -128,11 +128,6 @@ public class PlayerUI : MonoBehaviour
 	[ContextMenu("Cycle")]
 	public void CycleObjectivePhotos()
 	{
-		if (isCycling)
-		{
-			return;
-		}
-
 		StartCoroutine(CycleEnum());
 	}
 
