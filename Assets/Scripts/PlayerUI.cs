@@ -45,6 +45,7 @@ public class PlayerUI : MonoBehaviour
 
 	public bool isWaitingInput => isDialogOpen || isTutorialOpen;
 
+	private bool isCycling;
 	private bool isAlreadyWon;
 	private bool isDialogOpen;
 	private bool isTutorialOpen;
@@ -119,25 +120,62 @@ public class PlayerUI : MonoBehaviour
 		while (objectivePhotoContainer.anchoredPosition.y > 0)
 		{
 			yield return null;
-			objectivePhotoContainer.anchoredPosition = new Vector2(objectivePhotoContainer.anchoredPosition.x, objectivePhotoContainer.anchoredPosition.y - Time.deltaTime);
+			objectivePhotoContainer.anchoredPosition = new Vector2(objectivePhotoContainer.anchoredPosition.x, objectivePhotoContainer.anchoredPosition.y - Time.deltaTime * 500);
 		}
+		objectivePhotoContainer.anchoredPosition = new Vector2(objectivePhotoContainer.anchoredPosition.x, 0f);
 	}
 
 	[ContextMenu("Cycle")]
 	public void CycleObjectivePhotos()
 	{
-		AudioManager.instance.PlaySwipe();
+		if (isCycling)
+		{
+			return;
+		}
 
+		StartCoroutine(CycleEnum());
+	}
+
+	IEnumerator CycleEnum()
+	{
+		AudioManager.instance.PlaySwipe();
+		isCycling = true;
+
+		while (objectivePhotoPositionUIs[currentFirstObjectivePhoto].anchoredPosition.y < 0)
+		{
+			yield return null;
+			objectivePhotoPositionUIs[currentFirstObjectivePhoto].anchoredPosition = new Vector2(
+				objectivePhotoPositionUIs[currentFirstObjectivePhoto].anchoredPosition.x, 
+				objectivePhotoPositionUIs[currentFirstObjectivePhoto].anchoredPosition.y + Time.deltaTime * 600);
+		}
 		objectivePhotoPositionUIs[currentFirstObjectivePhoto].anchoredPosition = new Vector2(0f, 0f);
 		objectivePhotoPositionUIs[currentFirstObjectivePhoto].SetSiblingIndex(0);
-
 		currentFirstObjectivePhoto = currentFirstObjectivePhoto + 1 >= objectivePhotoPositionUIs.Length ? 0 : currentFirstObjectivePhoto + 1;
+
+		bool done = false;
+		while (!done)
+		{
+			for (int i = 0; i < objectivePhotoPositionUIs.Length; i++)
+			{
+				yield return null;
+				RectTransform rect = objectivePhotoContainer.GetChild(i).GetComponent<RectTransform>();
+				Vector2 anchorPos = rect.anchoredPosition;
+				rect.anchoredPosition = new Vector2(anchorPos.x, rect.anchoredPosition.y - Time.deltaTime * 600);
+
+				if (rect.anchoredPosition.y < objectivePhotoHeights[i])
+				{
+					done = true;
+				}
+			}
+		}
 		for (int i = 0; i < objectivePhotoPositionUIs.Length; i++)
 		{
-			RectTransform rect =objectivePhotoContainer.GetChild(i).GetComponent<RectTransform>();
+			RectTransform rect = objectivePhotoContainer.GetChild(i).GetComponent<RectTransform>();
 			Vector2 anchorPos = rect.anchoredPosition;
 			rect.anchoredPosition = new Vector2(anchorPos.x, objectivePhotoHeights[i]);
 		}
+
+		isCycling = false;
 	}
 
 	public void CheckPhoto()

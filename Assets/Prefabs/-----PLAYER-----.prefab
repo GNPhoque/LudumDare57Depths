@@ -1043,8 +1043,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1848446747597643358}
   - {fileID: 5462916182029252120}
+  - {fileID: 1848446747597643358}
   m_Father: {fileID: 176337323096313803}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
@@ -1270,8 +1270,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4027757566980418260}
   - {fileID: 3737674633654801408}
+  - {fileID: 4027757566980418260}
   m_Father: {fileID: 176337323096313803}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
@@ -1961,8 +1961,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4292565163268206055}
   - {fileID: 3895611955761602895}
+  - {fileID: 4292565163268206055}
   m_Father: {fileID: 176337323096313803}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
@@ -2832,6 +2832,7 @@ MonoBehaviour:
     _aperture: 4
   takeScreenshot: {fileID: 3656658965725085758}
   playerUI: {fileID: 746580570462355495}
+  isCheckingPhoto: 0
 --- !u!114 &3656658965725085758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3579,8 +3580,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8866043202679437209}
   - {fileID: 2359654056441154934}
+  - {fileID: 8866043202679437209}
   m_Father: {fileID: 176337323096313803}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}

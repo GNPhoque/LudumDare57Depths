@@ -35,6 +35,7 @@ public class CameraController : MonoBehaviour
 	[SerializeField] private PlayerUI playerUI;
 
 	private bool isPhotoOk;
+	public bool isCheckingPhoto;
 	private DepthOfField dof;
 	private WaitForSeconds wfs = new WaitForSeconds(1f);
 
@@ -176,6 +177,7 @@ public class CameraController : MonoBehaviour
 
 	public IEnumerator TakePhoto()
 	{
+		isCheckingPhoto = true;
 		AudioManager.instance.PlayTrigger();
 		if (debugSave != null) debugSave.TakeScreenshot();
 		Sprite sprite = takeScreenshot.TakePhoto();
@@ -247,6 +249,7 @@ public class CameraController : MonoBehaviour
 
 		playerUI.SetDialogs(dialogStrings);
 		playerUI.OnDialogCompleted += ClosePhotoReport;
+		isCheckingPhoto = false;
 	}
 
 	private void ClosePhotoReport()

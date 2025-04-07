@@ -105,6 +105,10 @@ public class PlayerController : MonoBehaviour
 		}
 		else
 		{
+			if (cameraController.isCheckingPhoto)
+			{
+				return;
+			}
 			StartCoroutine(cameraController.TakePhoto());
 		}
 	}
